@@ -192,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 });
-
     }
     public static LatLng getLatLng () {
         return latLng;

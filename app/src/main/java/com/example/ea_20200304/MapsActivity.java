@@ -12,16 +12,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-
-    ImageButton homeButton;
-    ImageButton contactsButton;
-    ImageButton settingsButton;
-    ImageButton mapButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +27,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
     }
 
     /**
@@ -46,9 +44,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        try {
+            mMap.setMyLocationEnabled(true);
+        } catch (SecurityException se) {
+
+        }
+
+        //Edit the following as per you needs
+        mMap.setTrafficEnabled(true);
+        mMap.setIndoorEnabled(true);
+        mMap.setBuildingsEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+
+        LatLng placeLocation = null;
+
+        while (placeLocation == null) {
+            placeLocation = MainActivity.getLatLng();
+        }
+
+        if(placeLocation != null) {
+
+            Marker placeMarker = mMap.addMarker(new MarkerOptions().position(placeLocation)
+                    .title("Current Location"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(placeLocation));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 1000, null);
+        }
     }
 }
